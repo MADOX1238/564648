@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spherely</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        text-align: center;
+        margin-top: 50px;
+      }
+      h1 {
+        color: #1877f2;
+        font-size: 30px;
+      }
+      .login-container {
+        background-color: #fff;
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .btn {
+        background-color: #1877f2;
+        color: white;
+        border: none;
+        padding: 14px;
+        width: 100%;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background-color: #165eaa;
+      }
+      .create-account {
+        margin-top: 15px;
+        font-size: 14px;
+      }
+      .create-account a {
+        color: #1877f2;
+        text-decoration: none;
+      }
+      .create-account a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>مرحباً بك في Spherely</h1>
+    <div class="login-container">
+      <form id="loginForm">
+        <input type="text" name="username" placeholder="اسم المستخدم أو البريد الإلكتروني" required>
+        <input type="password" name="password" placeholder="كلمة المرور" required>
+        <button type="submit" class="btn">تسجيل دخول</button>
+      </form>
+      <div class="create-account">
+        <span>لا تملك حساب؟ </span><a href="signup.html">إنشاء حساب جديد</a>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCe4nIbSuyN6sHEFvfpdRbzyILyr-zVhKo",
+        authDomain: "chat-mad-4ec6d.firebaseapp.com",
+        databaseURL: "https://chat-mad-4ec6d-default-rtdb.firebaseio.com",
+        projectId: "chat-mad-4ec6d",
+        storageBucket: "chat-mad-4ec6d.firebasestorage.app",
+        messagingSenderId: "133266731034",
+        appId: "1:133266731034:web:3540d3b2f20c2e3225a1a3",
+        measurementId: "G-12J0W1SW14"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = e.target.username.value;
+        const password = e.target.password.value;
+
+        const userRef = ref(db, 'users/' + username);
+        get(userRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            if (userData.password === password) {
+              window.location.href = 'home.html'; // التوجيه إلى الصفحة الرئيسية بعد تسجيل الدخول
+            } else {
+              alert('كلمة المرور غير صحيحة');
+            }
+          } else {
+            alert('هذا المستخدم غير موجود');
+          }
+        }).catch((error) => {
+          alert('حدث خطأ أثناء محاولة تسجيل الدخول');
+        });
+      });
+    </script>
+  
+</body></html>
